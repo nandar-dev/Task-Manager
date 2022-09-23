@@ -1,0 +1,29 @@
+{
+  "name": "vite-project",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "axios": "^0.27.2",
+    "each-async": "^2.0.0",
+    "element-plus": "^2.2.16",
+    "indent-string": "^5.0.0",
+    "mint-ui": "^2.2.13",
+    "sass": "^1.54.9",
+    "vue": "^3.2.37",
+    "vue-router": "^4.1.5",
+    "vuex": "^4.0.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^3.0.3",
+    "node-sass": "^7.0.3",
+    "sass-loader": "^13.0.2",
+    "vite": "^3.0.7",
+    "vue-cli-plugin-i18n": "~2.3.1"
+  }
+}
