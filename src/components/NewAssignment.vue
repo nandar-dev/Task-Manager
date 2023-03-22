@@ -156,7 +156,7 @@ function submit(FormInstance) {
         };
         console.log(data);
         axios
-          .post("http://localhost:4000/assignment", data)
+          .post("https://task-manager-api-ku16.onrender.com/assignment", data)
           .then((response) => {
             if (response.status == 201) {
               cancel();
@@ -188,7 +188,7 @@ function submit(FormInstance) {
         };
         console.log(data);
         axios
-          .put("http://localhost:4000/assignment/" + Form.id, data)
+          .put("https://task-manager-api-ku16.onrender.com/assignment/" + Form.id, data)
           .then((response) => {
             isSubmit.value = false;
             if (response.status == 200) {

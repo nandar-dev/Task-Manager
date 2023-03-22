@@ -156,7 +156,7 @@ export default defineComponent({
     function confirmDelete() {
       isDeleting.value = true;
       axios
-        .delete("http://localhost:4000/assignment/" + forDeleteValue.id)
+        .delete("https://task-manager-api-ku16.onrender.com/assignment/" + forDeleteValue.id)
         .then((response) => {
           if (response.status == 200) {
             store.dispatch("fetchAssignment").then((res) => {

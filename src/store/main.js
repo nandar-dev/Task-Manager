@@ -27,7 +27,7 @@ export default createStore({
   actions: {
     async fetchAssignment({ commit }) {
       try {
-        const item = await axios.get("http://localhost:4000/assignment");
+        const item = await axios.get("https://task-manager-api-ku16.onrender.com/assignment");
         commit("SET_ASSIGN", item.data);
       } catch (err) {
         ElMessage.error("Something went wrong");
