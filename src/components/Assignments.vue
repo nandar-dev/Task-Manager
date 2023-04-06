@@ -6,40 +6,85 @@
     </div>
   </div>
   <!-- <el-button type="primary" @click="addNewAssign">Add New </el-button> -->
-  <NewAssignment v-if="addNew == true" :dialogVisible="addNew" @update:dialogVisible="updateDialog"
-    :formStatus="formStat" :forUpdate="forUpdateData" />
+  <NewAssignment
+    v-if="addNew == true"
+    :dialogVisible="addNew"
+    @update:dialogVisible="updateDialog"
+    :formStatus="formStat"
+    :forUpdate="forUpdateData" />
 
   <div class="content">
     <el-card shadow="always">
-      <el-table ref="filterTable" v-loading="getAssign.length == 0" :data="filterTableData" stripe style="width: 100%">
+      <el-table
+        ref="filterTable"
+        v-loading="loading"
+        :data="filterTableData"
+        stripe
+        style="width: 100%">
         <el-table-column sortable prop="title" label="Title" width="180" />
         <el-table-column prop="assignedto" label="Assignee" width="180" />
         <!-- <el-table-column prop="status" label="status" width="180" /> -->
 
-        <el-table-column prop="status" label="Status" width="180" :filters="[
-          { text: 'Normal', value: 'Normal' },
-          { text: 'Important', value: 'Important' },
-        ]" :filter-method="filterTag" filter-placement="bottom-end">
+        <el-table-column
+          prop="status"
+          label="Status"
+          width="180"
+          :filters="[
+            { text: 'Normal', value: 'Normal' },
+            { text: 'Important', value: 'Important' },
+          ]"
+          :filter-method="filterTag"
+          filter-placement="bottom-end">
           <template #default="scope">
-            <el-tag :type="scope.row.status === 'Normal' ? '' : 'warning'" disable-transitions>{{ scope.row.status }}
+            <el-tag
+              :type="scope.row.status === 'Normal' ? '' : 'warning'"
+              disable-transitions
+              >{{ scope.row.status }}
             </el-tag>
           </template>
         </el-table-column>
 
         <el-table-column prop="desc" label="Description" />
-        <el-table-column prop="date" label="Date" width="180" />
+        <el-table-column prop="date" label="Date" width="180">
+          <template #default="scope">
+            {{ moment(scope.row.date).format("DD/MM/YYYY") }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="complete" label="Complete">
+          <template #default="scope">
+            <el-tag v-if="scope.row.complete" class="ml-2" type="success"
+              >Completed</el-tag
+            >
+            <el-tag v-else class="ml-2" type="warning">On Procress</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column align="right">
           <template #header>
-            <el-input v-model="search" size="small" placeholder="Type to search" />
+            <el-input
+              v-model="search"
+              size="small"
+              placeholder="Type to search" />
           </template>
           <template #default="scope">
-            <el-button size="small" @click="updateAssign(scope.row)">Edit</el-button>
-            <el-button size="small" type="danger" @click="deleteAssign(scope.row)">Delete</el-button>
+            <el-button size="small" @click="updateAssign(scope.row)"
+              >Edit</el-button
+            >
+
+            <el-button
+              size="small"
+              type="danger"
+              @click="deleteAssign(scope.row)"
+              >Delete</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
-      <div style="margin-top: 20px;">
-        <el-pagination background layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="pageSize"
+      <div style="margin-top: 20px">
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          @current-change="handleCurrentChange"
+          :page-size="pageSize"
           :total="total">
         </el-pagination>
       </div>
@@ -48,9 +93,14 @@
 
   <!-- dialog -->
 
-  <el-dialog v-model="centerDialogVisible" title="Delete?" width="30%" align-center>
+  <el-dialog
+    v-model="centerDialogVisible"
+    title="Delete?"
+    width="30%"
+    align-center>
     <p>
-      <span><b>{{ forDeleteValue.title }} </b>
+      <span
+        ><b>{{ forDeleteValue.title }} </b>
       </span>
       will be deleted permanently.
     </p>
@@ -58,7 +108,9 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="centerDialogVisible = false">Cancel</el-button>
-        <el-button type="danger" v-if="!isDeleting" @click="confirmDelete">Delete</el-button>
+        <el-button type="danger" v-if="!isDeleting" @click="confirmDelete"
+          >Delete</el-button
+        >
 
         <el-button type="danger" v-else loading>Deleting</el-button>
       </span>
@@ -67,12 +119,20 @@
 </template>
 
 <script>
-import { ref, onMounted, computed, defineComponent, reactive, toRefs } from "vue";
+import {
+  ref,
+  onMounted,
+  computed,
+  defineComponent,
+  reactive,
+  toRefs,
+} from "vue";
 import NewAssignment from "./NewAssignment.vue";
 import { useStore } from "vuex";
 import axios from "axios";
 import { ElMessage } from "element-plus";
 import theme from "../store/modules/theme";
+import moment from "moment";
 
 export default defineComponent({
   props: {},
@@ -81,17 +141,16 @@ export default defineComponent({
   },
 
   setup() {
-
     const state = reactive({
       filtered: [],
-      search: '',
+      search: "",
       page: 1,
-      pageSize: 2,
+      pageSize: 5,
       total: 0,
-    })
+    });
 
     const store = useStore();
-    const theme = computed(() => store.state.theme.theme)
+    const theme = computed(() => store.state.theme.theme);
     const formStat = ref("");
     const addNew = ref(false);
     const forUpdateData = ref({});
@@ -99,6 +158,7 @@ export default defineComponent({
     const forDeleteValue = ref({});
     const isDeleting = ref(false);
     const filterTable = ref();
+    const loading = ref(false);
 
     const getAssign = computed(() => {
       return store.getters.getAssignment;
@@ -114,15 +174,13 @@ export default defineComponent({
         (data) =>
           !search.value ||
           data.title.toLowerCase().includes(search.value.toLowerCase())
-      )
+      );
       state.total = state.filtered.length;
       return state.filtered.slice(
         state.pageSize * state.page - state.pageSize,
         state.pageSize * state.page
       );
-    }
-
-    );
+    });
     function handleCurrentChange(val) {
       state.page = val;
       // $refs.filterTable.clearFilter();
@@ -156,7 +214,10 @@ export default defineComponent({
     function confirmDelete() {
       isDeleting.value = true;
       axios
-        .delete("https://task-manager-api-ku16.onrender.com/assignment/" + forDeleteValue.id)
+        .delete(
+          "https://task-manager-api-ku16.onrender.com/assignment/" +
+            forDeleteValue.value.id
+        )
         .then((response) => {
           if (response.status == 200) {
             store.dispatch("fetchAssignment").then((res) => {
@@ -171,10 +232,14 @@ export default defineComponent({
         });
     }
     onMounted(() => {
-      store.dispatch("fetchAssignment");
+      loading.value = true;
+      store.dispatch("fetchAssignment").then(()=>{
+        loading.value = false;
+      });
     });
 
     return {
+      moment,
       ...toRefs(state),
       getAssign,
       assignments,
@@ -194,6 +259,8 @@ export default defineComponent({
       updateDialog,
       filterTag,
       handleCurrentChange,
+      forDeleteValue,
+      loading,
     };
   },
 });

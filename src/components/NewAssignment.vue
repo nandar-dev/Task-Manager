@@ -149,10 +149,11 @@ function submit(FormInstance) {
         const data = {
           id: Math.random() * 10000,
           title: Form.title,
-          assignedto: Form.assignto[0],
+          assignedto: Form.assignto,
           status: Form.radio,
           desc: Form.desc,
-          date: "2016-05-04",
+          date: new Date(),
+          complete: false
         };
         console.log(data);
         axios
@@ -181,7 +182,7 @@ function submit(FormInstance) {
         const data = {
           id: Form.id,
           title: Form.title,
-          assignedto: Form.assignto[0],
+          assignedto: Form.assignto,
           status: Form.radio,
           desc: Form.desc,
           date: Form.date,

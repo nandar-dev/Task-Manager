@@ -13,6 +13,7 @@
     "each-async": "^2.0.0",
     "element-plus": "^2.2.16",
     "indent-string": "^5.0.0",
+    "moment": "^2.29.4",
     "sass": "^1.54.9",
     "vue": "^3.2.37",
     "vue-router": "^4.1.5",

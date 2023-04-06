@@ -5,7 +5,7 @@ import theme from "./modules/theme.js"
 
 export default createStore({
   state: {
-    title: "Assignment",
+    title: "ToDo",
     assignments: [],
   },
   getters: {

@@ -3,7 +3,7 @@
         :ellipsis="false" @select="handleSelect">
 
         <router-link to="/">
-            <el-menu-item index="0">{{store.state.title}}</el-menu-item>
+            <el-menu-item class="title" index="0">{{store.state.title}}</el-menu-item>
         </router-link>
         <div class="flex-grow" />
 
@@ -49,10 +49,13 @@ export default {
                 store.dispatch("setTheme", "dark");
                 localStorage.setItem("theme", "dark");
                 document.documentElement.setAttribute("data-theme", "dark");
+                document.documentElement.setAttribute("class", "dark");
             } else {
                 store.dispatch("setTheme", "light");
                 localStorage.setItem("theme", "light");
                 document.documentElement.setAttribute("data-theme", "light");
+                document.documentElement.setAttribute("class", "light");
+
             }
         })
 
@@ -65,6 +68,12 @@ export default {
 </script>
 
 <style scoped>
+
+.title{
+    font-size: 22px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
 .flex-grow {
     flex-grow: 1;
 }
