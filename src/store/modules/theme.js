@@ -1,6 +1,6 @@
 export default {
     state: {
-        theme: localStorage.getItem('theme') || 'dark'
+        theme: localStorage.getItem('theme') || 'light'
     },
 
     gettters: {
